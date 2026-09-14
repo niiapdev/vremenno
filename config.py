@@ -9,7 +9,6 @@ OUTPUT_DIR = BASE_DIR / 'video_subtitled'
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 ALLOWED_FORMATS = ['.mp4', '.mkv', '.webm', '.avi']
-MAX_FILE_SIZE_MB = 2000
 
 WHISPER_MODEL = 'medium'
 WHISPER_DEVICE = 'cpu'

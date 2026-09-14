@@ -4,7 +4,7 @@ from pathlib import Path
 
 import yt_dlp
 
-from config import WORK_DIR, ALLOWED_FORMATS, MAX_FILE_SIZE_MB
+from config import WORK_DIR, ALLOWED_FORMATS
 
 logger = logging.getLogger(__name__)
 
@@ -56,9 +56,5 @@ async def download_video(url: str) -> tuple:
         raise FileNotFoundError(f"Video not found after download: {filepath}")
 
     size_mb = filepath.stat().st_size / (1024 * 1024)
-    if size_mb > MAX_FILE_SIZE_MB:
-        filepath.unlink()
-        raise ValueError(f"File too large: {size_mb:.1f}MB (max {MAX_FILE_SIZE_MB}MB)")
-
     logger.info(f"Downloaded: {filepath.name} ({size_mb:.1f}MB)")
     return filepath, title
