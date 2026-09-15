@@ -37,7 +37,7 @@ async def merge_video_subtitles(video_path: Path, srt_path: Path) -> Path:
                 capture_output=True,
                 text=True,
                 cwd=str(tmp_dir),
-                timeout=600
+                timeout=None
             )
 
             if result.returncode != 0:
