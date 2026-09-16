@@ -5,9 +5,7 @@ import shutil
 from vkbottle.bot import Bot, Message
 
 from config import VK_TOKEN, OUTPUT_DIR
-from downloader import download_video
-from translator import transcribe_video
-from merger import merge_video_subtitles, cleanup_files
+from pipeline import VideoPipeline
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -52,22 +50,16 @@ async def handle_url(message: Message):
     merged_path = None
 
     try:
-        await message.answer("⏳ Скачиваю видео...")
-        video_path, title = await download_video(url)
+        await message.answer("✅ Ссылка принята! Видео встало в очередь.\n"
+                             "Я обработаю его по очереди (одно за раз) и положу результат в:\n"
+                             f"{OUTPUT_DIR}\n\n"
+                             "⏳ Не отправляю в чат — файл будет лежать там.")
+        pipeline.submit(url=url, user_id=user_id, translate_to_ru=False)
+        return
 
-        await message.answer("⏳ Транскрибирую...")
-        srt_en_path = await transcribe_video(video_path)
-
-        await message.answer("⏳ Склеиваю видео с субтитрами...")
-        merged_path = await merge_video_subtitles(video_path, srt_en_path)
-
-        final_path = OUTPUT_DIR / merged_path.name
-        shutil.move(str(merged_path), str(final_path))
-
-        await message.answer(
-            f"✅ Готово!\n\n"
-            f"Файл: {final_path}"
-        )
+    except Exception as e:
+        logger.error(f"Error submitting job: {e}", exc_info=True)
+        await message.answer(f"❌ Ошибка постановки в очередь: {str(e)[:200]}")
 
     except Exception as e:
         logger.error(f"Error processing video: {e}", exc_info=True)
