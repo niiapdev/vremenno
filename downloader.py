@@ -34,6 +34,23 @@ async def download_video(url: str) -> tuple:
             }],
             'quiet': True,
             'no_warnings': True,
+            'retries': 10,
+            'fragment_retries': 10,
+            'socket_timeout': 30,
+            'extractor_retries': 5,
+            'http_headers': {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+                'Accept': 'video/webm,video/mp4,video/*;q=0.9,*/*;q=0.8',
+                'Accept-Language': 'ru,en-US;q=0.9,en;q=0.8,ru-RU;q=0.7',
+            },
+            'continue': True,
+            'nopart': False,
+            'retries': 10,
+            'fragment_retries': 10,
+            'socket_timeout': 30,
+            'extractor_retries': 5,
+            'continue': True,
+            'nopart': False,
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
